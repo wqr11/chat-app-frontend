@@ -1,4 +1,4 @@
-import { IconProps } from "@/shared/icons";
+import { IconProps } from "@/components/icon";
 
 export const SendIcon: React.FC<IconProps> = ({ fill = "black", ...props }) => {
   return (

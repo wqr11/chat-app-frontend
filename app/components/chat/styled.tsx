@@ -5,17 +5,17 @@ export interface ChatStyledProps {
   $active?: boolean;
 }
 
-export const ChatStyled = styled.div<ChatStyledProps>`
+export const ChatStyled = styled.button<ChatStyledProps>`
+  all: unset;
   max-width: 100%;
   display: flex;
   align-items: center;
   gap: 26px;
   padding: 8px 18px;
   border-radius: 10px;
-  border: 2px dashed transparent;
   background-color: ${({ theme }) => theme.colors.grayScale.bg};
   &:hover {
-    border-color: ${({ theme }) => theme.colors.grayScale.gray3};
+    outline: 2px dashed ${({ theme }) => theme.colors.grayScale.gray4};
     background-color: ${({ theme }) => theme.colors.grayScale.gray2};
     cursor: pointer;
   }
@@ -43,16 +43,3 @@ export const ChatLeft = styled.div`
 export const ChatName = styled(Typography).attrs({
   $variant: "p-normal",
 })``;
-
-export const ChatAction = styled.button`
-  all: unset;
-  margin-left: auto;
-
-  &:hover {
-    cursor: pointer;
-    svg circle {
-      fill: ${({ theme }) => theme.colors.grayScale.gray3};
-      stroke: ${({ theme }) => theme.colors.grayScale.gray3};
-    }
-  }
-`;

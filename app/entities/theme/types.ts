@@ -20,6 +20,8 @@ export type Theme = {
     maxMobile: number;
   };
   zIndex: {
+    backdrop: number;
+    modal: number;
     notifications: number;
   };
 };

@@ -56,5 +56,8 @@ export const Typography = styled.span<TypographyProps>`
       font-weight: ${fontWeight};
     `;
   }}
+  overflow-wrap: break-word;
+  word-break: normal;
+  word-wrap: break-word;
   color: ${({ theme }) => theme.colors.base.black};
 `;

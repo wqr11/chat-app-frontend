@@ -1,4 +1,4 @@
-import { IconProps } from "@/shared/icons";
+import { IconProps } from "@/components/icon";
 
 export const CloseIcon: React.FC<IconProps> = ({
   fill = "black",
@@ -9,12 +9,12 @@ export const CloseIcon: React.FC<IconProps> = ({
       <path
         d="M0.646446 23.2739L23.2739 0.646448"
         stroke={fill}
-        stroke-linecap="round"
+        strokeLinecap="round"
       />
       <path
         d="M1.35355 0.646446L23.981 23.2739"
         stroke={fill}
-        stroke-linecap="round"
+        strokeLinecap="round"
       />
     </svg>
   );

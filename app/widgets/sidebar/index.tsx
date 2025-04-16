@@ -1,10 +1,10 @@
 import { ChatItem } from "@/components/chat";
-import { Input } from "@/components/input";
+import { Search } from "@/components/fields/search";
 import { SidebarStyled } from "./styled";
 
 export const Sidebar = () => (
   <SidebarStyled>
-    <Input />
+    <Search />
     <ChatItem></ChatItem>
     <ChatItem></ChatItem>
   </SidebarStyled>

@@ -1,4 +1,4 @@
-import { IconProps } from "@/shared/icons";
+import { IconProps } from "@/components/icon";
 
 export const SearchIcon: React.FC<IconProps> = ({
   fill = "black",
@@ -13,7 +13,7 @@ export const SearchIcon: React.FC<IconProps> = ({
         x2="12.293"
         y2="17.0147"
         stroke={fill}
-        stroke-linecap="round"
+        strokeLinecap="round"
       />
     </svg>
   );

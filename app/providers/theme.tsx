@@ -35,6 +35,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
             maxMobile: 540,
           },
           zIndex: {
+            backdrop: 3,
+            modal: 6,
             notifications: 8,
           },
         };
@@ -59,6 +61,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
             maxMobile: 540,
           },
           zIndex: {
+            backdrop: 3,
+            modal: 6,
             notifications: 8,
           },
         };
