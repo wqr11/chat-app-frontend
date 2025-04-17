@@ -1,6 +1,17 @@
-import { css, styled } from "styled-components";
+import { css, keyframes, styled } from "styled-components";
 import { ProfileIcon } from "@/icons/profile";
 import { Typography } from "@/components/typography";
+
+const messageAnimation = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  } 
+  to{
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
 
 export interface MessageStyledProps {
   $variant: "user" | "companion";
@@ -12,6 +23,7 @@ export const MessageStyled = styled.div<MessageStyledProps>`
   align-items: end;
   overflow-wrap: break-word;
   word-break: normal;
+  animation: ${messageAnimation} 0.2s ease-out 1 forwards;
   ${({ $variant }) =>
     $variant === "user" &&
     css`

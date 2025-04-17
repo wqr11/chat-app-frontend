@@ -11,8 +11,6 @@ export const SubmitButtonStyled = styled(Button)<SubmitButtonStyledProps>`
   border-radius: 10px;
   background-color: ${({ theme }) => theme.colors.grayScale.bg};
   outline: 1px solid ${({ theme }) => theme.colors.grayScale.gray2};
-  user-select: none;
-  -webkit-user-select: none;
   &:hover {
     outline: 2px dashed ${({ theme }) => theme.colors.grayScale.gray4};
   }

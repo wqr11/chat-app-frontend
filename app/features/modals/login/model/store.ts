@@ -31,7 +31,7 @@ sample({
 });
 
 sample({
-  clock: formatFieldsFx.doneData,
+  source: formatFieldsFx.doneData,
   target: loginFx,
 });
 

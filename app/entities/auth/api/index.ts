@@ -3,13 +3,16 @@ import { API_URL } from "@/shared/config";
 
 export class AuthApi {
   static async signUp({
+    name,
     email,
     password,
   }: {
+    name: string;
     email: string;
     password: string;
   }) {
     return await $httpHost.post(`${API_URL}/auth/signup`, {
+      name,
       email,
       password,
     });

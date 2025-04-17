@@ -30,6 +30,7 @@ export const ChatWindow: React.FC = () => {
 
   const [messageText, setMessageText] = useState<string>("");
 
+  const inputMessageRef = useRef<HTMLFormElement>(null);
   const chatsRef = useRef<HTMLDivElement>(null);
 
   const user = useUnit(userModel.$user);
@@ -62,6 +63,8 @@ export const ChatWindow: React.FC = () => {
   }, [resetActiveChat]);
 
   const handleSend = useCallback(() => {
+    if (!chat?.id || messageText.length === 0) return;
+    const text = messageText;
     wsSendMessage({
       event: "CREATE",
       object: "MESSAGE",
@@ -69,10 +72,22 @@ export const ChatWindow: React.FC = () => {
         id: chat!.id!,
       },
       message: {
-        content: messageText,
+        content: text,
       },
     });
-  }, [chat?.id, messageText, wsSendMessage]);
+    setMessageText("");
+  }, [chat, messageText]);
+
+  const handleKeypress = (e: KeyboardEvent) => {
+    if (
+      e.key === "Enter" &&
+      e.shiftKey &&
+      inputMessageRef.current?.contains(document.activeElement)
+    ) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
 
   useEffect(() => {
     if (chatsRef.current) {
@@ -82,6 +97,14 @@ export const ChatWindow: React.FC = () => {
       });
     }
   }, [chat]);
+
+  useEffect(() => {
+    window.addEventListener("keypress", handleKeypress);
+
+    return () => {
+      window.removeEventListener("keypress", handleKeypress);
+    };
+  }, []);
 
   return (
     <ChatWindowStyled $activeChatExists={!!chat}>
@@ -103,7 +126,9 @@ export const ChatWindow: React.FC = () => {
           <ChatWindowChats ref={chatsRef}>{messagesNode}</ChatWindowChats>
           <ChatWindowInput>
             <InputMessage
+              ref={inputMessageRef}
               onChange={(m) => setMessageText(m)}
+              value={messageText}
               onSubmit={handleSend}
             />
           </ChatWindowInput>

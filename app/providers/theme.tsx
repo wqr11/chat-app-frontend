@@ -32,7 +32,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
           },
           size: {
             maxTablet: 860,
-            maxMobile: 540,
+            maxMobile: 640,
           },
           zIndex: {
             backdrop: 3,
@@ -58,7 +58,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
           },
           size: {
             maxTablet: 860,
-            maxMobile: 540,
+            maxMobile: 640,
           },
           zIndex: {
             backdrop: 3,

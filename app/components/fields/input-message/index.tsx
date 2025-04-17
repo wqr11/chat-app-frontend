@@ -10,16 +10,15 @@ import { useTheme } from "styled-components";
 export interface InputMessageProps {
   placeholder?: string;
   disabled?: boolean;
+  value?: string;
   onChange?: (message: string) => unknown;
   onSubmit?: () => unknown;
 }
 
-export const InputMessage: React.FC<InputMessageProps> = ({
-  placeholder,
-  disabled,
-  onChange,
-  onSubmit,
-}) => {
+export const InputMessage = React.forwardRef<
+  HTMLFormElement,
+  InputMessageProps
+>(({ placeholder, disabled, value, onChange, onSubmit }, externalRef) => {
   const theme = useTheme();
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -38,6 +37,7 @@ export const InputMessage: React.FC<InputMessageProps> = ({
 
   return (
     <InputMessageStyled
+      ref={externalRef}
       $disabled={disabled}
       onSubmit={(e) => e.preventDefault()}
       onClick={handleInputClick}
@@ -46,6 +46,7 @@ export const InputMessage: React.FC<InputMessageProps> = ({
         ref={textAreaRef}
         placeholder={placeholder}
         disabled={disabled}
+        value={value}
         onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
           onChange?.(e.target.value)
         }
@@ -55,4 +56,4 @@ export const InputMessage: React.FC<InputMessageProps> = ({
       </InputMessageSendButton>
     </InputMessageStyled>
   );
-};
+});

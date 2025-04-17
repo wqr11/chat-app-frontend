@@ -30,4 +30,6 @@ export const Button = styled.button<ButtonProps>`
       }
     `}
   transition: transform 0.3s ease-out, filter 0.3s ease-out;
+  user-select: none;
+  -webkit-user-select: none;
 `;

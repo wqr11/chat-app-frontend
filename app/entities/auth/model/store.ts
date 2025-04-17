@@ -25,8 +25,8 @@ export const signUpFx = createEffect<
   SignUpFxParams,
   SignUpFxResult,
   AxiosError
->(async ({ email, password }) => {
-  const { data } = await AuthApi.signUp({ email, password });
+>(async ({ name, email, password }) => {
+  const { data } = await AuthApi.signUp({ name, email, password });
   return data;
 });
 

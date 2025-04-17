@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import {
   SearchCloseButton,
   SearchField,
@@ -8,33 +8,51 @@ import {
 
 export interface SearchProps {
   placeholder?: string;
-  onInput?: (e: React.FormEvent) => unknown;
+  value?: string;
+  onChange?: (msg: string) => unknown;
   onClear?: () => unknown;
   onSubmit?: () => unknown;
 }
 
 export const Search: React.FC<SearchProps> = React.memo(
-  ({ placeholder, onClear, onInput, onSubmit }) => {
+  ({ placeholder, value, onClear, onChange, onSubmit }) => {
     const inputRef = useRef<HTMLInputElement>(null);
-
-    const handleSubmit = useCallback(
-      (e: React.FormEvent) => {
-        e.preventDefault();
-        onSubmit?.();
-      },
-      [onSubmit]
-    );
 
     const handleInputClick = useCallback(() => {
       inputRef.current?.focus();
     }, [inputRef.current]);
 
+    const handleKeypress = (e: KeyboardEvent) => {
+      if (
+        e.key === "Enter" &&
+        inputRef?.current?.contains(document.activeElement)
+      ) {
+        e.preventDefault();
+        onSubmit?.();
+      }
+    };
+
+    useEffect(() => {
+      window.addEventListener("keypress", handleKeypress);
+
+      return () => {
+        window.removeEventListener("keypress", handleKeypress);
+      };
+    });
+
     return (
-      <SearchStyled onSubmit={handleSubmit} onClick={handleInputClick}>
+      <SearchStyled
+        onSubmit={(e) => e.preventDefault()}
+        onClick={handleInputClick}
+      >
         <SearchIconStyled />
         <SearchField
           ref={inputRef}
-          onInput={onInput}
+          value={value}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onChange?.(e.target.value)
+          }
+          onSubmit={(e) => e.preventDefault()}
           placeholder={placeholder}
         />
         <SearchCloseButton onClick={onClear} />

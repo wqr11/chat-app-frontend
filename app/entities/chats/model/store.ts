@@ -39,6 +39,12 @@ export const $chatsWithoutMessages = combine($chats, (chats) =>
   chats.map((chat) => ({ ...chat, messages: undefined }))
 );
 
+export const resetSearchedChats = createEvent<void>();
+export const setSearchedChats = createEvent<IChat[]>();
+export const $searchedChats = createStore<IChat[]>([])
+  .on(setSearchedChats, (_, data) => data)
+  .reset(resetSearchedChats);
+
 export const resetActiveChatId = createEvent<void>();
 export const setActiveChatId = createEvent<string | null>();
 export const $activeChatId = createStore<string | null>(null)

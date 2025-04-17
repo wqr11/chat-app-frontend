@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import { Modal } from "@/components/modal";
 import { Input } from "@/components/fields/input";
 
@@ -27,6 +27,22 @@ export const SignUpModal: React.FC<SignUpModalProps> = React.memo(
     const confPass = useUnit(signUpModalModel.$confirmPassword);
 
     const submit = useUnit(signUpModalModel.submit);
+
+    const handleKeypress = useCallback((e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        submit();
+      }
+    }, []);
+
+    useEffect(() => {
+      window.addEventListener("keypress", handleKeypress);
+
+      return () => {
+        window.removeEventListener("keypress", handleKeypress);
+      };
+    });
 
     return (
       <Modal title="Регистрация" open={open} closable={false}>

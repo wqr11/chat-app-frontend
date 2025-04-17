@@ -11,20 +11,14 @@ import { userModel } from "@/entities/user";
 import { WsClientMessage, WsClientMessageSchema } from "../schema";
 import { authModel } from "@/entities/auth";
 
-const ws = new ReconnectingWebSocket(WS_URL);
-
-/*
- * This runs outside of this file in @/pages/chats/model/store.ts
- *
- *  @returns ws {WebSocket}
- */
+let ws: ReconnectingWebSocket;
 
 export const wsReconnectFx = createEffect(() => {
   ws.reconnect();
   return;
 });
 
-export const wsMessageReceivedFx = createEffect<MessageEvent, void, Error>(
+const wsMessageReceivedFx = createEffect<MessageEvent, void, Error>(
   (e: WsEvent) => {
     const msg = JSON.parse(e.data) as WsServerMessage;
 
@@ -41,6 +35,9 @@ export const wsMessageReceivedFx = createEffect<MessageEvent, void, Error>(
         switch (msg.object) {
           case "CHAT":
             chatModel.appendChats(msg.data);
+            break;
+          case "SEARCH_CHATS":
+            chatModel.setSearchedChats(msg.data);
             break;
           case "MESSAGE":
             chatModel.appendMessages(msg.data);
@@ -66,8 +63,6 @@ export const wsMessageReceivedFx = createEffect<MessageEvent, void, Error>(
   }
 );
 
-ws.onmessage = wsMessageReceivedFx;
-
 export const wsSendMessageFx = createEffect<WsClientMessage, void, Error>(
   async (message) => {
     const parsedMessage = await WsClientMessageSchema.safeParseAsync(message);
@@ -80,6 +75,11 @@ export const wsSendMessageFx = createEffect<WsClientMessage, void, Error>(
     return;
   }
 );
+
+export const wsConnectFx = createEffect(() => {
+  ws = new ReconnectingWebSocket(WS_URL);
+  ws.onmessage = wsMessageReceivedFx;
+});
 
 sample({
   clock: authModel.refreshFx.doneData,
