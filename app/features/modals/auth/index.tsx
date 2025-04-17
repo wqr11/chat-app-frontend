@@ -24,7 +24,7 @@ export const AuthModal = React.memo(() => {
     setLoginModalOpen(false);
   }, [setSignUpModalOpen, setLoginModalOpen]);
 
-  if (!isAuth) {
+  if (isAuth) {
     return null;
   }
 

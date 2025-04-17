@@ -1,4 +1,10 @@
-import React, { useMemo } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useTheme } from "styled-components";
 import { InputMessage } from "@/components/fields/input-message";
 import { Message } from "@/components/message";
@@ -14,81 +20,104 @@ import {
   ChatWindowInput,
   ChatWindowStyled,
 } from "./styled";
-import { IChat, IUser } from "@/shared/types/db";
+import { useUnit } from "effector-react";
+import { chatModel } from "@/entities/chats";
+import { wsModel } from "@/entities/ws";
+import { userModel } from "@/entities/user";
 
-export interface ChatWindowProps {
-  user?: IUser;
-  chat?: IChat;
-}
+export const ChatWindow: React.FC = () => {
+  const theme = useTheme();
 
-export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
-  ({ user, chat }) => {
-    const theme = useTheme();
+  const [messageText, setMessageText] = useState<string>("");
 
-    const emojiNode = useMemo(() => {
-      const emojis = [
-        "😃",
-        "😅",
-        "🙂",
-        "🙃",
-        "😉",
-        "😊",
-        "🥰",
-        "😍",
-        "😘",
-        "😜",
-      ];
+  const chatsRef = useRef<HTMLDivElement>(null);
 
-      return emojis[Math.floor(Math.random() * 10)];
-    }, []);
+  const user = useUnit(userModel.$user);
+  const chat = useUnit(chatModel.$activeChat);
+  const resetActiveChat = useUnit(chatModel.resetActiveChatId);
+  const wsSendMessage = useUnit(wsModel.wsSendMessageFx);
 
-    const messagesNode = useMemo(
-      () =>
-        chat?.messages.map((msg) => (
-          <Message
-            key={msg.id}
-            $variant={user?.id === msg.author.id ? "user" : "companion"}
-            author={msg.author.name ?? "Неизвестный"}
-          >
-            {msg.content}
-          </Message>
-        )),
-      [chat?.messages]
-    );
+  const emojiNode = useMemo(() => {
+    const emojis = ["😃", "😅", "🙂", "🙃", "😉", "😊", "🥰", "😍", "😘", "😜"];
 
-    return (
-      <ChatWindowStyled>
-        {chat && (
-          <ChatWindowChatBar>
-            <ChatWindowChatBarReturnButton>
-              <ReturnIcon
-                width={24}
-                height={24}
-                fill={theme.colors.grayScale.gray4}
-                bg={theme.colors.grayScale.gray2}
-              />
-            </ChatWindowChatBarReturnButton>
-            <ChatWindowChatBarName>{chat?.name}</ChatWindowChatBarName>
-          </ChatWindowChatBar>
-        )}
-        {chat ? (
-          <>
-            <ChatWindowChats>{messagesNode}</ChatWindowChats>
-            <ChatWindowInput>
-              <InputMessage />
-            </ChatWindowInput>
-          </>
-        ) : (
-          <ChatWindowEmptyMessageStyled>
-            <ChatWindowEmptyMessageTitle>
-              Привет {emojiNode}
-            </ChatWindowEmptyMessageTitle>
-            <ChatWindowEmptyMessageText>
-              Выберите чат, чтобы начать общение
-            </ChatWindowEmptyMessageText>
-          </ChatWindowEmptyMessageStyled>
-        )}
-      </ChatWindowStyled>
-    );
-  }
-);
+    return emojis[Math.floor(Math.random() * 10)];
+  }, []);
+
+  const messagesNode = useMemo(
+    () =>
+      chat?.messages.map((msg) => (
+        <Message
+          key={msg.id}
+          $variant={user?.id === msg.author.id ? "user" : "companion"}
+          author={msg.author.name ?? msg.author.email.split("@")[0]}
+        >
+          {msg.content}
+        </Message>
+      )),
+    [chat?.messages, user?.id]
+  );
+
+  const handleReturn = useCallback(() => {
+    resetActiveChat();
+  }, [resetActiveChat]);
+
+  const handleSend = useCallback(() => {
+    wsSendMessage({
+      event: "CREATE",
+      object: "MESSAGE",
+      chat: {
+        id: chat!.id!,
+      },
+      message: {
+        content: messageText,
+      },
+    });
+  }, [chat?.id, messageText, wsSendMessage]);
+
+  useEffect(() => {
+    if (chatsRef.current) {
+      chatsRef.current.scroll({
+        behavior: "instant",
+        top: chatsRef.current.scrollHeight,
+      });
+    }
+  }, [chat]);
+
+  return (
+    <ChatWindowStyled $activeChatExists={!!chat}>
+      {chat && (
+        <ChatWindowChatBar>
+          <ChatWindowChatBarReturnButton onClick={handleReturn}>
+            <ReturnIcon
+              width={24}
+              height={24}
+              fill={theme.colors.grayScale.gray4}
+              bg={theme.colors.grayScale.gray2}
+            />
+          </ChatWindowChatBarReturnButton>
+          <ChatWindowChatBarName>{chat?.name}</ChatWindowChatBarName>
+        </ChatWindowChatBar>
+      )}
+      {chat ? (
+        <>
+          <ChatWindowChats ref={chatsRef}>{messagesNode}</ChatWindowChats>
+          <ChatWindowInput>
+            <InputMessage
+              onChange={(m) => setMessageText(m)}
+              onSubmit={handleSend}
+            />
+          </ChatWindowInput>
+        </>
+      ) : (
+        <ChatWindowEmptyMessageStyled>
+          <ChatWindowEmptyMessageTitle>
+            Привет {emojiNode}
+          </ChatWindowEmptyMessageTitle>
+          <ChatWindowEmptyMessageText>
+            Выберите чат, чтобы начать общение
+          </ChatWindowEmptyMessageText>
+        </ChatWindowEmptyMessageStyled>
+      )}
+    </ChatWindowStyled>
+  );
+};

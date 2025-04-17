@@ -1,14 +1,23 @@
-import { styled } from "styled-components";
+import { css, styled } from "styled-components";
 import { Button } from "@/components/button";
 import { Typography } from "@/components/typography";
 
-export const ChatWindowStyled = styled.div`
+export interface ChatWindowStyledProps {
+  $activeChatExists?: boolean;
+}
+
+export const ChatWindowStyled = styled.div<ChatWindowStyledProps>`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   border-radius: 10px;
   background-color: ${({ theme }) => theme.colors.grayScale.bg};
   border: 1px solid ${({ theme }) => theme.colors.grayScale.gray2};
+  ${({ $activeChatExists, theme }) => css`
+    @media (width <= ${theme.size.maxMobile}px) {
+      display: ${$activeChatExists ? "flex" : "none"};
+    }
+  `}
 `;
 
 export const ChatWindowChatBar = styled.div`
@@ -42,6 +51,9 @@ export const ChatWindowChats = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
+  @media (width <= ${({ theme }) => theme.size.maxMobile}px) {
+    padding-inline: 24px;
+  }
 `;
 
 export const ChatWindowInput = styled.div`

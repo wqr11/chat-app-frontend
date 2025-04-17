@@ -43,7 +43,8 @@ export const InputMessageTextArea = styled.textarea.attrs({
 export const InputMessageSendButton = styled(Button)`
   height: 100%;
   position: absolute;
-  top: 0;
+  align-items: start;
+  top: 24px;
   right: 38px;
   svg path {
     stroke: ${({ theme }) => theme.colors.grayScale.gray4};

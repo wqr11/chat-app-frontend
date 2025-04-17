@@ -69,7 +69,7 @@ export const $authTokens = combine(
 
 export const $isAuth = combine(
   $authTokens,
-  ({ access, refresh }) => !access && !refresh
+  ({ access, refresh }) => !!access && !!refresh
 );
 
 sample({
@@ -78,6 +78,12 @@ sample({
   filter: (creds) => !!creds,
   fn: (creds) => creds!,
   target: loginFx,
+});
+
+sample({
+  clock: getTokensFromCookies.doneData,
+  filter: ({ access, refresh }) => !access && !!refresh,
+  target: refreshFx,
 });
 
 split({

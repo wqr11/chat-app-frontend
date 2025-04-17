@@ -28,6 +28,7 @@ export const SearchStyled = styled.form`
       display: flex;
     }
   }
+  z-index: 1;
 `;
 
 export const SearchField = styled.input.attrs({

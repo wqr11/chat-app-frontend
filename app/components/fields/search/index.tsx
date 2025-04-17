@@ -7,10 +7,10 @@ import {
 } from "./styled";
 
 export interface SearchProps {
-  placeholder: string;
-  onInput: (e: React.FormEvent) => unknown;
-  onClear: () => unknown;
-  onSubmit: () => unknown;
+  placeholder?: string;
+  onInput?: (e: React.FormEvent) => unknown;
+  onClear?: () => unknown;
+  onSubmit?: () => unknown;
 }
 
 export const Search: React.FC<SearchProps> = React.memo(
@@ -20,7 +20,7 @@ export const Search: React.FC<SearchProps> = React.memo(
     const handleSubmit = useCallback(
       (e: React.FormEvent) => {
         e.preventDefault();
-        onSubmit();
+        onSubmit?.();
       },
       [onSubmit]
     );

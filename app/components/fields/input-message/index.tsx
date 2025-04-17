@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+import React, { ChangeEvent, useCallback, useRef } from "react";
 import {
   InputMessageSendButton,
   InputMessageStyled,
@@ -10,14 +10,14 @@ import { useTheme } from "styled-components";
 export interface InputMessageProps {
   placeholder?: string;
   disabled?: boolean;
-  onInput?: (e: React.FormEvent) => unknown;
+  onChange?: (message: string) => unknown;
   onSubmit?: () => unknown;
 }
 
 export const InputMessage: React.FC<InputMessageProps> = ({
   placeholder,
   disabled,
-  onInput,
+  onChange,
   onSubmit,
 }) => {
   const theme = useTheme();
@@ -34,21 +34,23 @@ export const InputMessage: React.FC<InputMessageProps> = ({
 
   const handleInputClick = useCallback(() => {
     textAreaRef.current?.focus();
-  }, [textAreaRef.current]);
+  }, []);
 
   return (
     <InputMessageStyled
       $disabled={disabled}
-      onSubmit={handleSubmit}
+      onSubmit={(e) => e.preventDefault()}
       onClick={handleInputClick}
     >
       <InputMessageTextArea
         ref={textAreaRef}
         placeholder={placeholder}
         disabled={disabled}
-        onInput={onInput}
+        onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+          onChange?.(e.target.value)
+        }
       />
-      <InputMessageSendButton $disabled={disabled} onClick={onSubmit}>
+      <InputMessageSendButton $disabled={disabled} onClick={handleSubmit}>
         <SendIcon width={30} height={30} fill={theme.colors.grayScale.gray4} />
       </InputMessageSendButton>
     </InputMessageStyled>

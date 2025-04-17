@@ -1,5 +1,5 @@
 import { createStore, createEvent, createEffect, sample } from "effector";
-import { LoginFormSchema, LoginFormType } from "@/shared/zod";
+import { LoginFormSchema, LoginFormType } from "@/entities/auth/schemas";
 import { loginFx } from "@/entities/auth/model";
 import { notificationModel } from "@/entities/notifications";
 

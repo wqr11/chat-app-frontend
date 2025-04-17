@@ -1,6 +1,6 @@
 import { signUpFx } from "@/entities/auth/model";
 import { notificationModel } from "@/entities/notifications";
-import { SignUpFormSchema, SignUpFormType } from "@/shared/zod";
+import { SignUpFormSchema, SignUpFormType } from "@/entities/auth/schemas";
 import { createStore, createEvent, createEffect, sample } from "effector";
 
 export const setName = createEvent<string>();
